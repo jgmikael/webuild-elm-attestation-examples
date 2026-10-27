@@ -1,0 +1,558 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    {
+      "@version": 1.1,
+      "@protected": true,
+      "elm": {
+        "@id": "http://data.europa.eu/snb/model/ontology/",
+        "@prefix": true
+      },
+      "dct": {
+        "@id": "http://purl.org/dc/terms/",
+        "@prefix": true
+      },
+      "xsd": {
+        "@id": "http://www.w3.org/2001/XMLSchema#",
+        "@prefix": true
+      },
+      "skos": {
+        "@id": "http://www.w3.org/2004/02/skos/core#",
+        "@prefix": true
+      },
+      "adms": {
+        "@id": "http://www.w3.org/ns/adms#",
+        "@prefix": true
+      },
+      "foaf": {
+        "@id": "http://xmlns.com/foaf/0.1/",
+        "@prefix": true
+      },
+      "rov": {
+        "@id": "http://www.w3.org/ns/regorg#",
+        "@prefix": true
+      },
+      "EuropeanDigitalCredential": "http://data.europa.eu/snb/model/ontology/EuropeanDigitalCredential",
+      "Person": "http://data.europa.eu/snb/model/ontology/Person",
+      "Organisation": "http://data.europa.eu/snb/model/ontology/Organisation",
+      "LearningAchievement": "http://data.europa.eu/snb/model/ontology/LearningAchievement",
+      "LearningAchievementSpecification": "http://data.europa.eu/snb/model/ontology/LearningAchievementSpecification",
+      "Qualification": "http://data.europa.eu/snb/model/ontology/Qualification",
+      "AwardingProcess": "http://data.europa.eu/snb/model/ontology/AwardingProcess",
+      "DisplayParameter": "http://data.europa.eu/snb/model/ontology/DisplayParameter",
+      "LearningOutcome": "http://data.europa.eu/snb/model/ontology/LearningOutcome",
+      "CreditPoint": "http://data.europa.eu/snb/model/ontology/CreditPoint",
+      "LearningAssessment": "http://data.europa.eu/snb/model/ontology/LearningAssessment",
+      "LearningAssessmentSpecification": "http://data.europa.eu/snb/model/ontology/LearningAssessmentSpecification",
+      "LearningActivitySpecification": "http://data.europa.eu/snb/model/ontology/LearningActivitySpecification",
+      "GradingScheme": "http://data.europa.eu/snb/model/ontology/GradingScheme",
+      "Accreditation": "http://data.europa.eu/snb/model/ontology/Accreditation",
+      "Address": "http://data.europa.eu/snb/model/ontology/Address",
+      "ContactPoint": "http://data.europa.eu/snb/model/ontology/ContactPoint",
+      "LegalIdentifier": "http://data.europa.eu/snb/model/ontology/LegalIdentifier",
+      "Identifier": "http://data.europa.eu/snb/model/ontology/Identifier",
+      "Note": "http://data.europa.eu/snb/model/ontology/Note",
+      "Concept": "http://www.w3.org/2004/02/skos/core#Concept",
+      "Location": "http://purl.org/dc/terms/Location",
+      "title": {
+        "@id": "http://purl.org/dc/terms/title",
+        "@language": "en"
+      },
+      "givenName": {
+        "@id": "http://xmlns.com/foaf/0.1/givenName",
+        "@language": "en"
+      },
+      "familyName": {
+        "@id": "http://xmlns.com/foaf/0.1/familyName",
+        "@language": "en"
+      },
+      "legalName": {
+        "@id": "http://www.w3.org/ns/regorg#legalName",
+        "@language": "en"
+      },
+      "noteLiteral": {
+        "@id": "http://data.europa.eu/snb/model/ontology/noteLiteral",
+        "@language": "en"
+      },
+      "learningOutcomeDescription": {
+        "@id": "http://purl.org/dc/terms/description",
+        "@language": "en"
+      },
+      "preferredLabel": {
+        "@id": "http://www.w3.org/2004/02/skos/core#prefLabel",
+        "@language": "en"
+      },
+      "identifier": {
+        "@id": "http://www.w3.org/ns/adms#identifier",
+        "@type": "@id"
+      },
+      "displayParameter": {
+        "@id": "http://data.europa.eu/snb/model/ontology/displayParameter",
+        "@type": "@id"
+      },
+      "hasClaim": {
+        "@id": "http://data.europa.eu/snb/model/ontology/hasClaim",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "awardedBy": {
+        "@id": "http://data.europa.eu/snb/model/ontology/awardedBy",
+        "@type": "@id"
+      },
+      "awardingBody": {
+        "@id": "http://data.europa.eu/snb/model/ontology/awardingBody",
+        "@type": "@id"
+      },
+      "specifiedBy": {
+        "@id": "http://data.europa.eu/snb/model/ontology/specifiedBy",
+        "@type": "@id"
+      },
+      "provenBy": {
+        "@id": "http://data.europa.eu/snb/model/ontology/provenBy",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "influencedBy": {
+        "@id": "http://data.europa.eu/snb/model/ontology/influencedBy",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "location": {
+        "@id": "http://data.europa.eu/snb/model/ontology/location",
+        "@type": "@id"
+      },
+      "address": {
+        "@id": "http://data.europa.eu/snb/model/ontology/address",
+        "@type": "@id"
+      },
+      "fullAddress": {
+        "@id": "http://data.europa.eu/snb/model/ontology/fullAddress",
+        "@type": "@id"
+      },
+      "countryCode": {
+        "@id": "http://data.europa.eu/snb/model/ontology/countryCode",
+        "@type": "@id"
+      },
+      "placeOfBirth": {
+        "@id": "http://data.europa.eu/snb/model/ontology/placeOfBirth",
+        "@type": "@id"
+      },
+      "citizenshipCountry": {
+        "@id": "http://data.europa.eu/snb/model/ontology/citizenshipCountry",
+        "@type": "@id"
+      },
+      "nationalID": {
+        "@id": "http://data.europa.eu/snb/model/ontology/nationalId",
+        "@type": "@id"
+      },
+      "contactPoint": {
+        "@id": "http://data.europa.eu/snb/model/ontology/contactPoint",
+        "@type": "@id"
+      },
+      "mail": {
+        "@id": "http://data.europa.eu/snb/model/ontology/emailAddress",
+        "@type": "@id"
+      },
+      "legalIdentifier": {
+        "@id": "http://www.w3.org/ns/regorg#registration",
+        "@type": "@id"
+      },
+      "homepage": {
+        "@id": "http://xmlns.com/foaf/0.1/homepage",
+        "@type": "@id"
+      },
+      "escoReference": {
+        "@id": "http://data.europa.eu/snb/model/ontology/relatedESCOSkill",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "typeOfAssessment": {
+        "@id": "http://purl.org/dc/terms/type",
+        "@type": "@id"
+      },
+      "formOfParticipation": {
+        "@id": "http://data.europa.eu/snb/model/ontology/mode",
+        "@type": "@id"
+      },
+      "learningActivityType": {
+        "@id": "http://purl.org/dc/terms/type",
+        "@type": "@id"
+      },
+      "languageOfAssessment": {
+        "@id": "http://purl.org/dc/terms/language",
+        "@type": "@id"
+      },
+      "idVerificationMethod": {
+        "@id": "http://data.europa.eu/snb/model/ontology/idVerification",
+        "@type": "@id"
+      },
+      "gradingScheme": {
+        "@id": "http://data.europa.eu/snb/model/ontology/gradingScheme",
+        "@type": "@id"
+      },
+      "accreditation": {
+        "@id": "http://data.europa.eu/snb/model/ontology/accreditation",
+        "@type": "@id"
+      },
+      "accreditationType": {
+        "@id": "http://purl.org/dc/terms/type",
+        "@type": "@id"
+      },
+      "accreditingAgent": {
+        "@id": "http://data.europa.eu/snb/model/ontology/accreditingAgent",
+        "@type": "@id"
+      },
+      "additionalNote": {
+        "@id": "http://data.europa.eu/snb/model/ontology/additionalNote",
+        "@type": "@id"
+      },
+      "issuanceDate": {
+        "@id": "https://www.w3.org/2018/credentials#issued",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "dateOfBirth": {
+        "@id": "http://data.europa.eu/snb/model/ontology/dateOfBirth",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "decisionDate": {
+        "@id": "http://purl.org/dc/terms/issued",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "notation": {
+        "@id": "http://www.w3.org/2004/02/skos/core#notation",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "grade": {
+        "@id": "http://data.europa.eu/snb/model/ontology/grade",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "decision": {
+        "@id": "http://data.europa.eu/snb/model/ontology/decision",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "attestation_legal_category": {
+        "@id": "https://example.org/webuild/verified-skill/profile/attestation_legal_category",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "sdJwtVct": {
+        "@id": "https://example.org/webuild/verified-skill/profile/vct",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "sdJwtJti": {
+        "@id": "https://example.org/webuild/verified-skill/profile/jti",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "sdJwtTrustAnchor": {
+        "@id": "https://example.org/webuild/verified-skill/profile/trust_anchor",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "sdJwtCryptographicallyBoundTo": {
+        "@id": "https://example.org/webuild/verified-skill/profile/cryptographically_bound_to",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "sdJwtIat": {
+        "@id": "https://example.org/webuild/verified-skill/profile/iat",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "sdJwtExp": {
+        "@id": "https://example.org/webuild/verified-skill/profile/exp",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "sdJwtNbf": {
+        "@id": "https://example.org/webuild/verified-skill/profile/nbf",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      },
+      "sdJwtCnf": {
+        "@id": "https://example.org/webuild/verified-skill/profile/cnf",
+        "@type": "@json"
+      },
+      "sdJwtStatus": {
+        "@id": "https://example.org/webuild/verified-skill/profile/status",
+        "@type": "@json"
+      },
+      "vs": {
+        "@id": "https://example.org/webuild/verified-skill/profile/",
+        "@prefix": true
+      },
+      "VerifiedSkillCredential": "https://example.org/webuild/verified-skill/profile/VerifiedSkillCredential",
+      "skillOutcome": {
+        "@id": "http://data.europa.eu/snb/model/ontology/learningOutcome",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "skillProficiencyLevel": {
+        "@id": "https://example.org/webuild/verified-skill/profile/skillProficiencyLevel",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "qualityAssuranceLevel": {
+        "@id": "https://example.org/webuild/verified-skill/profile/qualityAssuranceLevel",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "methodType": {
+        "@id": "https://example.org/webuild/verified-skill/profile/methodType",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "reference": {
+        "@id": "https://example.org/webuild/verified-skill/profile/reference",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "qualityAssuranceMethod": {
+        "@id": "https://example.org/webuild/verified-skill/profile/qualityAssuranceMethod",
+        "@type": "@id"
+      },
+      "qualityFramework": {
+        "@id": "https://example.org/webuild/verified-skill/profile/qualityFramework",
+        "@type": "@id"
+      },
+      "auditInformation": {
+        "@id": "https://example.org/webuild/verified-skill/profile/auditInformation",
+        "@type": "@id"
+      },
+      "assessmentEvidence": {
+        "@id": "https://example.org/webuild/verified-skill/profile/assessmentEvidence",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "assessmentBasis": {
+        "@id": "http://data.europa.eu/snb/model/ontology/additionalNote",
+        "@type": "@id"
+      },
+      "assessor": {
+        "@id": "http://data.europa.eu/snb/model/ontology/assessedBy",
+        "@type": "@id"
+      },
+      "responsibleParty": {
+        "@id": "http://purl.org/dc/terms/creator",
+        "@type": "@id"
+      },
+      "evidenceReference": {
+        "@id": "http://purl.org/dc/terms/source",
+        "@type": "@id"
+      },
+      "evidenceDescription": {
+        "@id": "http://data.europa.eu/snb/model/ontology/evidenceStatement",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "auditor": {
+        "@id": "https://example.org/webuild/verified-skill/profile/auditor",
+        "@type": "@id"
+      },
+      "auditBasis": {
+        "@id": "https://example.org/webuild/verified-skill/profile/auditBasis",
+        "@type": "http://www.w3.org/2001/XMLSchema#string"
+      },
+      "assessmentDate": {
+        "@id": "http://purl.org/dc/terms/issued",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "auditDate": {
+        "@id": "http://purl.org/dc/terms/issued",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "reviewDate": {
+        "@id": "https://example.org/webuild/verified-skill/profile/reviewDate",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "accreditationReviewDate": {
+        "@id": "http://data.europa.eu/snb/model/ontology/reviewDate",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      },
+      "volumeOfLearning": {
+        "@id": "http://data.europa.eu/snb/model/ontology/volumeOfLearning",
+        "@type": "http://www.w3.org/2001/XMLSchema#duration"
+      },
+      "QualityAssuranceMethod": "https://example.org/webuild/verified-skill/profile/QualityAssuranceMethod",
+      "QualityFramework": "https://example.org/webuild/verified-skill/profile/QualityFramework",
+      "AssessmentEvidence": "https://example.org/webuild/verified-skill/profile/AssessmentEvidence",
+      "AuditEvidence": "https://example.org/webuild/verified-skill/profile/AuditEvidence",
+      "AuditInformation": "https://example.org/webuild/verified-skill/profile/AuditInformation",
+      "Evidence": "http://data.europa.eu/snb/model/ontology/Evidence",
+      "Agent": "http://data.europa.eu/snb/model/ontology/Agent",
+      "agentName": {
+        "@id": "http://xmlns.com/foaf/0.1/name",
+        "@language": "en"
+      }
+    }
+  ],
+  "id": "urn:uuid:4ba902f5-7035-4d46-98bc-fd55d9a85592",
+  "type": [
+    "VerifiableCredential",
+    "EuropeanDigitalCredential",
+    "VerifiedSkillCredential"
+  ],
+  "name": "DEMO — Industrial Hydrogen Compressor Operation",
+  "description": "Fictional, unsigned example of a skill assessment. Not a licence or authorisation to operate industrial equipment.",
+  "attestation_legal_category": "non-qualified-EAA",
+  "identifier": {
+    "type": "Identifier",
+    "notation": "DEMO-VS-2026-0007421"
+  },
+  "displayParameter": {
+    "type": "DisplayParameter",
+    "title": "Industrial Hydrogen Compressor Operation"
+  },
+  "issuer": {
+    "id": "https://issuer.skills.example.org/organisations/credential-service",
+    "type": "Organisation",
+    "legalName": "Example Skills Credential Service",
+    "location": {
+      "type": "Location",
+      "address": {
+        "type": "Address",
+        "fullAddress": {
+          "type": "Note",
+          "noteLiteral": "10 Example Credential Street, Rotterdam, Netherlands"
+        },
+        "countryCode": "http://publications.europa.eu/resource/authority/country/NLD"
+      }
+    }
+  },
+  "issuanceDate": "2026-06-15T10:00:00Z",
+  "validFrom": "2026-06-15T10:00:00Z",
+  "credentialSubject": {
+    "id": "urn:uuid:56bfdb5e-c98e-4bc2-a4c6-3c0d96a8a821",
+    "type": "Person",
+    "givenName": "Elena",
+    "familyName": "Kowalska",
+    "contactPoint": {
+      "type": "ContactPoint",
+      "mail": "mailto:elena.kowalska@example.org"
+    },
+    "hasClaim": [
+      {
+        "id": "https://skills.example.org/achievements/DEMO-VS-2026-0007421",
+        "type": "LearningAchievement",
+        "title": "Demonstrated safe hydrogen compressor operation",
+        "skillProficiencyLevel": "competent",
+        "reviewDate": "2029-06-15T00:00:00Z",
+        "awardedBy": {
+          "type": "AwardingProcess",
+          "awardingBody": {
+            "id": "https://skills.example.org/organisations/hydrogen-training-centre",
+            "type": "Organisation",
+            "legalName": "Example Hydrogen Training Centre",
+            "location": {
+              "type": "Location",
+              "address": {
+                "type": "Address",
+                "fullAddress": {
+                  "type": "Note",
+                  "noteLiteral": "1 Example Training Road, Rotterdam, Netherlands"
+                },
+                "countryCode": "http://publications.europa.eu/resource/authority/country/NLD"
+              }
+            }
+          }
+        },
+        "specifiedBy": {
+          "id": "https://skills.example.org/skill-specifications/hydrogen-compressor-operation",
+          "type": "LearningAchievementSpecification",
+          "title": "Industrial hydrogen compressor operation — skill specification",
+          "skillOutcome": [
+            {
+              "type": "LearningOutcome",
+              "title": "Safe operation under normal conditions",
+              "learningOutcomeDescription": "Operates an industrial hydrogen compressor safely under normal operating conditions, identifies abnormal indications and follows the documented escalation procedure."
+            }
+          ],
+          "volumeOfLearning": "PT80H",
+          "provenBy": [
+            {
+              "id": "https://skills.example.org/assessment-specifications/hydrogen-compressor-2026",
+              "type": "LearningAssessmentSpecification",
+              "title": "Hydrogen compressor practical assessment criteria",
+              "typeOfAssessment": {
+                "type": "Concept",
+                "notation": "structured-observation",
+                "preferredLabel": "Structured observation"
+              },
+              "languageOfAssessment": {
+                "type": "Concept",
+                "notation": "en",
+                "preferredLabel": "English"
+              },
+              "gradingScheme": {
+                "type": "GradingScheme",
+                "title": "Three-result scale",
+                "learningOutcomeDescription": "Not yet demonstrated / demonstrated / demonstrated with distinction."
+              }
+            }
+          ],
+          "influencedBy": [
+            {
+              "type": "LearningActivitySpecification",
+              "title": "Supervised workplace practice",
+              "formOfParticipation": {
+                "type": "Concept",
+                "notation": "workplace-based",
+                "preferredLabel": "Workplace-based"
+              },
+              "learningActivityType": {
+                "type": "Concept",
+                "notation": "work-experience",
+                "preferredLabel": "Work experience"
+              }
+            }
+          ]
+        },
+        "provenBy": [
+          {
+            "id": "https://skills.example.org/assessments/DEMO-ELENA-2026-001",
+            "type": "LearningAssessment",
+            "title": "Observed compressor-operation assessment",
+            "assessmentDate": "2026-06-12T14:00:00Z",
+            "specifiedBy": {
+              "id": "https://skills.example.org/assessment-specifications/hydrogen-compressor-2026",
+              "type": "LearningAssessmentSpecification"
+            },
+            "assessor": {
+              "id": "https://assessor.example.org/organisations/independent-skill-foundation",
+              "type": "Organisation",
+              "legalName": "Example Independent Skills Assessment Foundation"
+            },
+            "idVerificationMethod": {
+              "type": "Concept",
+              "notation": "onsite-with-identity-verification",
+              "preferredLabel": "Onsite identity verification"
+            },
+            "assessmentBasis": {
+              "type": "Note",
+              "noteLiteral": "Observed operation during three supervised demonstration shifts using a documented assessment checklist."
+            },
+            "grade": "demonstrated",
+            "qualityAssuranceLevel": "third-party-assessed",
+            "qualityAssuranceMethod": {
+              "type": "QualityAssuranceMethod",
+              "methodType": "external-assessment-procedure",
+              "title": "Independent Workplace Skills Assessment Procedure",
+              "reference": "DEMO-PROCEDURE-H2-2026-v1"
+            },
+            "qualityFramework": {
+              "type": "QualityFramework",
+              "title": "Example Workplace Skill Assessment Framework",
+              "reference": "DEMO-FRAMEWORK-2026-v1"
+            },
+            "assessmentEvidence": [
+              {
+                "id": "https://skills.example.org/evidence/DEMO-H2-2026-001",
+                "type": "AssessmentEvidence",
+                "evidenceReference": "https://assessor.example.org/reports/DEMO-H2-2026-001",
+                "evidenceDescription": "Illustrative reference to a signed observation checklist for the three demonstration shifts.",
+                "responsibleParty": {
+                  "id": "https://assessor.example.org/organisations/independent-skill-foundation",
+                  "type": "Organisation"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "additionalNote": [
+    {
+      "type": "Note",
+      "noteLiteral": "All persons, organisations, skill results and evidence in this example are fictional. No certification, accreditation or authorisation to operate equipment is asserted."
+    }
+  ]
+}

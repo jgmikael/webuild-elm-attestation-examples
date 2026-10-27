@@ -1,0 +1,218 @@
+# W3C VC 2.0 derivative: original transport requirement disconnected; learning constraints retained.
+# WE BUILD Verified Skill — draft ELM-based SHACL application profile
+# Rulebook v0.2, 2026-10-05; source blob 6c6883cf8510fdc31e80f7d32e58be4a58faed30
+# https://github.com/webuild-consortium/webuild-attestation-rulebooks-catalog/tree/main/rulebooks/rb-verified-skill
+# ELM ontology 3.3.1; all ELM terms checked against its published documentation.
+# Covers all 36 distinct section-3 attributes and 10 section-4 metadata fields.
+# vs: is a proposed example.org extension namespace, not a published vocabulary.
+# Dreyfus proficiency is distinct from EQF; studyLoadHours converts to PT<n>H.
+# ELM dates are dateTimes; language-tagged text follows the earlier exercise.
+# String grade/decision follows the OWL-based interpretation in the first profile.
+# Required transport projection reflects the rulebook's SD-JWT profile. Use the
+# derived verified-skill-vc2.shacl.ttl for the unsigned W3C VC example instead.
+# Inner QA/evidence schemas are proposed minimal structures: rulebook object
+# fields are underspecified. Structural validation cannot establish independence,
+# genuine accreditation, authentic audit evidence, correctness of a skill claim,
+# the need for birth-date disclosure, or cryptographic/trust validity.
+# Vocabulary IRI syntax is checked, not live reference-dataset membership.
+# Validate complete issued data; this is not a selective-disclosure validator.
+
+@prefix vs:   <https://example.org/webuild/verified-skill/profile/> .
+@prefix elm:  <http://data.europa.eu/snb/model/ontology/> .
+@prefix cred: <https://www.w3.org/2018/credentials#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rov:  <http://www.w3.org/ns/regorg#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+
+
+vs:VerifiedSkillCredential a rdfs:Class .
+vs:skillProficiencyLevel a rdf:Property ; rdfs:range xsd:string .
+vs:qualityAssuranceLevel a rdf:Property ; rdfs:range xsd:string .
+vs:qualityAssuranceMethod a rdf:Property .
+vs:qualityFramework a rdf:Property .
+vs:assessmentEvidence a rdf:Property .
+vs:auditInformation a rdf:Property .
+vs:reviewDate a rdf:Property ; rdfs:range xsd:dateTime .
+
+vs:CredentialShape a sh:NodeShape ; sh:targetClass vs:VerifiedSkillCredential ;
+  sh:class elm:EuropeanDigitalCredential ;
+  sh:property
+    [ sh:path vs:attestation_legal_category ; sh:hasValue "non-qualified-EAA" ; sh:maxCount 1 ],
+    [ sh:path adms:identifier ; sh:name "identifier" ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:IdentifierShape ],
+    [ sh:path elm:displayParameter ; sh:minCount 1 ; sh:maxCount 1 ; sh:class elm:DisplayParameter ; sh:node [ sh:property
+      [ sh:path dct:title ; sh:name "title" ; sh:minCount 1 ; sh:node vs:TextShape ] ] ],
+    [ sh:path cred:issuer ; sh:name "iss" ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:class elm:Organisation ; sh:node [ sh:property
+      [ sh:path ( elm:location elm:address elm:countryCode ) ; sh:name "issuerCountry" ; sh:minCount 1 ; sh:node vs:CountryShape ] ] ],
+    [ sh:path cred:issued ; sh:name "issuanceDate" ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ],
+    [ sh:path cred:credentialSubject ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:HolderShape ],
+    [ sh:path elm:additionalNote ; sh:name "additionalNote" ; sh:node vs:NoteShape ],
+    [ sh:path cred:evidence ; sh:class elm:Evidence ; sh:node [ sh:property
+      [ sh:path elm:accreditation ; sh:name "accreditation" ; sh:node vs:AccreditationShape ] ] ] ;
+  sh:node vs:VC2EnvelopeShape ;
+  sh:sparql [ sh:message "issuanceDate must not precede assessmentDate." ; sh:select """SELECT $this WHERE {
+    $this <https://www.w3.org/2018/credentials#issued> ?issued ;
+      <https://www.w3.org/2018/credentials#credentialSubject>/<http://data.europa.eu/snb/model/ontology/hasClaim>/<http://data.europa.eu/snb/model/ontology/provenBy>/<http://purl.org/dc/terms/issued> ?assessed .
+    FILTER (?assessed > ?issued)
+  }""" ] ;
+  sh:sparql [ sh:message "audited-assessment requires audit information, an actual accreditation record, or explicitly identified equivalent audit evidence." ;
+    sh:select """SELECT $this WHERE {
+      $this <https://www.w3.org/2018/credentials#credentialSubject>/<http://data.europa.eu/snb/model/ontology/hasClaim>/<http://data.europa.eu/snb/model/ontology/provenBy> ?a .
+      ?a <https://example.org/webuild/verified-skill/profile/qualityAssuranceLevel> "audited-assessment" .
+      FILTER NOT EXISTS { ?a <https://example.org/webuild/verified-skill/profile/auditInformation> ?audit }
+      FILTER NOT EXISTS { $this <https://www.w3.org/2018/credentials#evidence>/<http://data.europa.eu/snb/model/ontology/accreditation> ?accreditation }
+      FILTER NOT EXISTS { ?a <https://example.org/webuild/verified-skill/profile/assessmentEvidence> ?e .
+        ?e a <https://example.org/webuild/verified-skill/profile/AuditEvidence> ;
+          <https://example.org/webuild/verified-skill/profile/auditBasis> ?basis ;
+          <http://purl.org/dc/terms/creator> ?auditor . }
+    }""" ] .
+
+vs:HolderShape a sh:NodeShape ; sh:class elm:Person ; sh:property
+  [ sh:path foaf:givenName ; sh:name "givenName" ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:TextShape ],
+  [ sh:path foaf:familyName ; sh:name "familyName" ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:TextShape ],
+  [ sh:path elm:dateOfBirth ; sh:name "dateOfBirth" ; sh:maxCount 1 ; sh:datatype xsd:dateTime ],
+  [ sh:path elm:placeOfBirth ; sh:name "placeOfBirth" ; sh:maxCount 1 ; sh:node vs:TextLocationShape ],
+  [ sh:path elm:citizenshipCountry ; sh:name "citizenshipCountry" ; sh:node vs:CountryShape ],
+  [ sh:path elm:nationalId ; sh:name "nationalID" ; sh:maxCount 1 ; sh:class elm:LegalIdentifier ; sh:node vs:NotationShape ],
+  [ sh:path elm:location ; sh:name "registeredAddress" ; sh:node vs:TextLocationShape ],
+  [ sh:path elm:contactPoint ; sh:class elm:ContactPoint ; sh:node [ sh:property
+    [ sh:path elm:emailAddress ; sh:name "mail" ; sh:minCount 1 ; sh:nodeKind sh:IRI ; sh:pattern "^mailto:[^@ ]+@[^@ ]+$" ] ] ],
+  [ sh:path elm:hasClaim ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:SkillClaimShape ] .
+
+vs:SkillClaimShape a sh:NodeShape ; sh:class elm:LearningAchievement ; sh:property
+  [ sh:path elm:awardedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class elm:AwardingProcess ],
+  [ sh:path ( elm:awardedBy elm:awardingBody ) ; sh:name "awardingBody" ; sh:minCount 1 ; sh:class elm:Organisation ; sh:node [ sh:property
+    [ sh:path rov:legalName ; sh:minCount 1 ; sh:node vs:TextShape ] ] ],
+  [ sh:path vs:skillProficiencyLevel ; sh:name "skillProficiencyLevel" ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ;
+    sh:in ( "novice" "advanced-beginner" "competent" "proficient" "expert" ) ],
+  [ sh:path vs:reviewDate ; sh:name "reviewDate" ; sh:maxCount 1 ; sh:datatype xsd:dateTime ],
+  [ sh:path elm:specifiedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:SkillSpecificationShape ],
+  [ sh:path elm:provenBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:AssessmentShape ] ;
+  sh:sparql [ sh:message "The actual assessment must use an assessment specification listed for this skill." ; sh:select """SELECT $this WHERE {
+    $this <http://data.europa.eu/snb/model/ontology/provenBy>/<http://data.europa.eu/snb/model/ontology/specifiedBy> ?a .
+    FILTER NOT EXISTS { $this <http://data.europa.eu/snb/model/ontology/specifiedBy>/<http://data.europa.eu/snb/model/ontology/provenBy> ?a }
+  }""" ] .
+
+vs:SkillSpecificationShape a sh:NodeShape ; sh:class elm:LearningAchievementSpecification ; sh:property
+  [ sh:path elm:learningOutcome ; sh:name "skillOutcome" ; sh:minCount 1 ; sh:class elm:LearningOutcome ; sh:node [ sh:property
+    [ sh:path dct:description ; sh:minCount 1 ; sh:node vs:TextShape ],
+    [ sh:path elm:relatedESCOSkill ; sh:name "escoReference" ; sh:nodeKind sh:IRI ; sh:pattern "^http://data[.]europa[.]eu/esco/skill/" ] ] ],
+  [ sh:path elm:volumeOfLearning ; sh:name "studyLoadHours (converted to duration)" ; sh:maxCount 1 ; sh:datatype xsd:duration ; sh:pattern "^P([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+([.][0-9]+)?S)?)?$" ],
+  [ sh:path elm:creditPoint ; sh:maxCount 0 ; sh:message "This skill profile expresses workload as hours, not ECTS." ],
+  [ sh:path elm:provenBy ; sh:minCount 1 ; sh:node vs:AssessmentSpecificationShape ],
+  [ sh:path elm:influencedBy ; sh:class elm:LearningActivitySpecification ; sh:node [ sh:property
+    [ sh:path elm:mode ; sh:name "formOfParticipation" ; sh:node vs:ConceptShape ],
+    [ sh:path dct:type ; sh:name "learningActivityType" ; sh:node vs:ConceptShape ] ] ] ;
+  sh:sparql [ sh:message "studyLoadHours must be positive." ; sh:select """SELECT $this WHERE {
+    $this <http://data.europa.eu/snb/model/ontology/volumeOfLearning> ?d .
+    FILTER (!REGEX(STR(?d), "[1-9]"))
+  }""" ] .
+
+vs:AssessmentSpecificationShape a sh:NodeShape ; sh:class elm:LearningAssessmentSpecification ; sh:property
+  [ sh:path dct:type ; sh:name "typeOfAssessment" ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:ConceptShape ],
+  [ sh:path dct:language ; sh:name "languageOfAssessment" ; sh:node vs:ConceptShape ],
+  [ sh:path elm:gradingScheme ; sh:name "gradingScheme" ; sh:maxCount 1 ; sh:class elm:GradingScheme ; sh:node [ sh:property
+    [ sh:path dct:title ; sh:minCount 1 ; sh:node vs:TextShape ] ] ] .
+
+vs:AssessmentShape a sh:NodeShape ; sh:class elm:LearningAssessment ; sh:property
+  [ sh:path elm:specifiedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:AssessmentSpecificationShape ],
+  [ sh:path dct:issued ; sh:name "assessmentDate" ; sh:maxCount 1 ; sh:datatype xsd:dateTime ],
+  [ sh:path elm:assessedBy ; sh:name "assessor" ; sh:node vs:NamedAgentShape ],
+  [ sh:path elm:idVerification ; sh:name "idVerificationMethod" ; sh:node vs:ConceptShape ],
+  [ sh:path elm:grade ; sh:name "grade" ; sh:maxCount 1 ; sh:datatype xsd:string ],
+  [ sh:path elm:additionalNote ; sh:name "assessmentBasis" ; sh:node vs:NoteShape ],
+  [ sh:path vs:qualityAssuranceLevel ; sh:name "qualityAssuranceLevel" ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ;
+    sh:in ( "self-asserted" "third-party-assessed" "audited-assessment" ) ],
+  [ sh:path vs:qualityAssuranceMethod ; sh:name "qualityAssuranceMethod" ; sh:minCount 1 ; sh:maxCount 1 ; sh:node vs:MethodShape ],
+  [ sh:path vs:qualityFramework ; sh:name "qualityFramework" ; sh:node vs:FrameworkShape ],
+  [ sh:path vs:assessmentEvidence ; sh:name "assessmentEvidence" ; sh:node vs:EvidenceShape ],
+  [ sh:path vs:auditInformation ; sh:name "auditInformation" ; sh:node vs:AuditShape ] ;
+  sh:sparql [ sh:message "third-party-assessed must identify a responsible assessor directly or through evidence." ; sh:select """SELECT $this WHERE {
+    $this <https://example.org/webuild/verified-skill/profile/qualityAssuranceLevel> "third-party-assessed" .
+    FILTER NOT EXISTS { $this <http://data.europa.eu/snb/model/ontology/assessedBy> ?agent }
+    FILTER NOT EXISTS { $this <https://example.org/webuild/verified-skill/profile/assessmentEvidence>/<http://purl.org/dc/terms/creator> ?agent }
+  }""" ] .
+
+# Proposed minimal object structures; the source rulebook does not specify these.
+vs:NamedAgentShape a sh:NodeShape ; sh:or (
+  [ sh:class elm:Organisation ; sh:property [ sh:path rov:legalName ; sh:minCount 1 ; sh:node vs:TextShape ] ]
+  [ sh:class elm:Person ; sh:property [ sh:path foaf:name ; sh:minCount 1 ; sh:node vs:TextShape ] ]
+  [ sh:class elm:Agent ; sh:property [ sh:path foaf:name ; sh:minCount 1 ; sh:node vs:TextShape ] ] ) .
+vs:MethodShape a sh:NodeShape ; sh:class vs:QualityAssuranceMethod ; sh:node vs:FrameworkShape ; sh:property
+  [ sh:path vs:methodType ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+vs:FrameworkShape a sh:NodeShape ; sh:property
+  [ sh:path dct:title ; sh:node vs:TextShape ],
+  [ sh:path vs:reference ; sh:datatype xsd:string ; sh:minLength 1 ] ; sh:or (
+    [ sh:property [ sh:path dct:title ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path vs:reference ; sh:minCount 1 ] ] ) .
+vs:EvidenceShape a sh:NodeShape ; sh:or ( [ sh:class vs:AssessmentEvidence ] [ sh:class vs:AuditEvidence ] ) ; sh:property
+  [ sh:path dct:source ; sh:minCount 1 ; sh:nodeKind sh:IRI ],
+  [ sh:path elm:evidenceStatement ; sh:datatype xsd:string ; sh:minLength 1 ],
+  [ sh:path dct:creator ; sh:node vs:NamedAgentShape ],
+  [ sh:path vs:auditBasis ; sh:datatype xsd:string ; sh:minLength 1 ] .
+vs:AuditShape a sh:NodeShape ; sh:class vs:AuditInformation ; sh:property
+  [ sh:path vs:auditor ; sh:minCount 1 ; sh:node vs:NamedAgentShape ],
+  [ sh:path dct:source ; sh:minCount 1 ; sh:nodeKind sh:IRI ],
+  [ sh:path vs:auditBasis ; sh:minCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ],
+  [ sh:path dct:issued ; sh:datatype xsd:dateTime ] .
+vs:AccreditationShape a sh:NodeShape ; sh:class elm:Accreditation ; sh:property
+  [ sh:path dct:title ; sh:minCount 1 ; sh:node vs:TextShape ],
+  [ sh:path dct:type ; sh:minCount 1 ; sh:node vs:ConceptShape ],
+  [ sh:path elm:accreditingAgent ; sh:minCount 1 ; sh:node vs:NamedAgentShape ],
+  [ sh:path elm:decision ; sh:datatype xsd:string ],
+  [ sh:path dct:issued ; sh:datatype xsd:dateTime ],
+  [ sh:path elm:reviewDate ; sh:datatype xsd:dateTime ],
+  [ sh:path foaf:homepage ; sh:nodeKind sh:IRI ] .
+vs:TextShape a sh:NodeShape ; sh:datatype rdf:langString ; sh:minLength 1 .
+vs:NoteShape a sh:NodeShape ; sh:class elm:Note ; sh:property
+  [ sh:path elm:noteLiteral ; sh:minCount 1 ; sh:node vs:TextShape ] .
+vs:NotationShape a sh:NodeShape ; sh:property
+  [ sh:path skos:notation ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+vs:IdentifierShape a sh:NodeShape ; sh:class elm:Identifier ; sh:node vs:NotationShape .
+vs:ConceptShape a sh:NodeShape ; sh:class skos:Concept ; sh:or (
+  [ sh:nodeKind sh:IRI ] [ sh:property [ sh:path skos:notation ; sh:minCount 1 ; sh:datatype xsd:string ] ] ) .
+vs:CodedConceptShape a sh:NodeShape ; sh:class skos:Concept ; sh:node vs:NotationShape .
+vs:CountryShape a sh:NodeShape ; sh:nodeKind sh:IRI ;
+  sh:pattern "^http://publications[.]europa[.]eu/resource/authority/country/[A-Z]{3}$" .
+vs:TextLocationShape a sh:NodeShape ; sh:class dct:Location ; sh:property
+  [ sh:path elm:address ; sh:minCount 1 ; sh:class elm:Address ],
+  [ sh:path ( elm:address elm:fullAddress ) ; sh:minCount 1 ; sh:node vs:NoteShape ] .
+
+
+# Original rulebook SD-JWT metadata projection; iss is cred:issuer above.
+vs:TransportShape a sh:NodeShape ; sh:property
+  [ sh:path vs:vct ; sh:hasValue "VerifiableVerifiedSkill" ; sh:maxCount 1 ],
+  [ sh:path vs:iat ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ],
+  [ sh:path vs:cnf ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype rdf:JSON ],
+  [ sh:path vs:exp ; sh:maxCount 1 ; sh:datatype xsd:integer ],
+  [ sh:path vs:nbf ; sh:maxCount 1 ; sh:datatype xsd:integer ],
+  [ sh:path vs:jti ; sh:maxCount 1 ; sh:datatype xsd:string ],
+  [ sh:path vs:status ; sh:maxCount 1 ; sh:datatype rdf:JSON ],
+  [ sh:path vs:trust_anchor ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ],
+  [ sh:path vs:cryptographically_bound_to ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:minLength 1 ] .
+
+
+vs:GradingAdvice a sh:NodeShape ; sh:targetObjectsOf elm:provenBy ; sh:severity sh:Warning ;
+  sh:sparql [ sh:message "grade present: include gradingScheme (SHOULD)." ; sh:select """SELECT $this WHERE {
+    $this <http://data.europa.eu/snb/model/ontology/grade> ?g .
+    FILTER NOT EXISTS { $this <http://data.europa.eu/snb/model/ontology/specifiedBy>/<http://data.europa.eu/snb/model/ontology/gradingScheme> ?s }
+  }""" ] .
+vs:EvidenceAdvice a sh:NodeShape ; sh:targetObjectsOf elm:provenBy ; sh:severity sh:Warning ;
+  sh:sparql [ sh:message "Consider disclosable assessmentEvidence for third-party/audited assessment (SHOULD; confidentiality may justify omission)." ; sh:select """SELECT $this WHERE {
+    $this <https://example.org/webuild/verified-skill/profile/qualityAssuranceLevel> ?qa .
+    FILTER (?qa IN ("third-party-assessed", "audited-assessment"))
+    FILTER NOT EXISTS { $this <https://example.org/webuild/verified-skill/profile/assessmentEvidence> ?e }
+  }""" ] .
+
+vs:VC2EnvelopeShape a sh:NodeShape ; sh:class cred:VerifiableCredential ; sh:property
+  [ sh:path cred:validFrom ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ],
+  [ sh:path cred:validUntil ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+  sh:sparql [ sh:message "validUntil must not precede validFrom." ; sh:select """SELECT $this WHERE {
+    $this <https://www.w3.org/2018/credentials#validFrom> ?from ;
+      <https://www.w3.org/2018/credentials#validUntil> ?until . FILTER (?until < ?from)
+  }""" ] .

@@ -1,0 +1,15 @@
+{
+  "json_ld_expansion": "PASS",
+  "vc2_semantic_shacl": "PASS",
+  "shacl_meta_validation": "PASS",
+  "rdf_round_trip": "PASS",
+  "undefined_json_keys": [],
+  "rdf_triples": 160,
+  "original_profile_expected_missing_sd_jwt_fields": [
+    "vct",
+    "iat",
+    "cnf"
+  ],
+  "proof": "unsigned example; cryptographic verification not performed",
+  "code_lists": "namespace checks only; membership/resolution not asserted"
+}

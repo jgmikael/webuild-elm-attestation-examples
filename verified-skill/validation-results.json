@@ -1,0 +1,71 @@
+{
+  "json_ld_expansion": "PASS",
+  "vc2_semantic_shacl": "PASS",
+  "shacl_meta_validation": "PASS",
+  "rdf_round_trip": "PASS",
+  "undefined_json_keys": [],
+  "rdf_triples": 118,
+  "verified_elm_terms": 53,
+  "source_table_distinct_claims": 46,
+  "original_profile_expected_missing_sd_jwt_fields": [
+    "vct",
+    "iat",
+    "cnf"
+  ],
+  "behavioral_checks": [
+    {
+      "check": "reject EQF as Dreyfus proficiency",
+      "result": "PASS"
+    },
+    {
+      "check": "reject missing proficiency",
+      "result": "PASS"
+    },
+    {
+      "check": "reject proficiency used as QA level",
+      "result": "PASS"
+    },
+    {
+      "check": "reject zero study hours",
+      "result": "PASS"
+    },
+    {
+      "check": "reject unconverted hours number",
+      "result": "PASS"
+    },
+    {
+      "check": "allow omitted workload for an experience-based skill",
+      "result": "PASS"
+    },
+    {
+      "check": "reject ECTS workload in skill profile",
+      "result": "PASS"
+    },
+    {
+      "check": "third-party level requires identified third party",
+      "result": "PASS"
+    },
+    {
+      "check": "audited level rejects observation-only evidence",
+      "result": "PASS"
+    },
+    {
+      "check": "audited level accepts explicitly identified equivalent audit evidence",
+      "result": "PASS"
+    },
+    {
+      "check": "audited level accepts structured auditInformation",
+      "result": "PASS"
+    },
+    {
+      "check": "reject assessment after issuance",
+      "result": "PASS"
+    },
+    {
+      "check": "missing disclosable evidence remains advisory when assessor is named",
+      "result": "PASS"
+    }
+  ],
+  "proof": "unsigned example; no cryptographic verification",
+  "external_validation": "independence, authenticity of audit/accreditation and code-list membership not established"
+}
